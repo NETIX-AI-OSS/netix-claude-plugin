@@ -1,7 +1,7 @@
 {
   "name": "netix-ai",
   "description": "NETIX AI Platform tools for Claude Code — assets, work orders, complaints, compliance, commercial, and telemetry analytics via the NETIX MCP server.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "NETIX.AI"
   },

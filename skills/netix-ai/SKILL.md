@@ -21,6 +21,10 @@ Tools are named `<domain>_<operation>`:
 
 Most list tools accept optional filters and `limit`. Responses are shaped `{count, results, has_more}` — `count` is the TOTAL matching rows, `results` is the returned page. Lead with the count when summarizing; fetch more pages only when the user needs them.
 
+## Filtering: prefer field-specific filters over `search`
+
+Every list tool exposes typed, field-specific filters — by id, status, priority, type, category, assignee, date range, and `*_icontains` name matches. Use them; they are precise and reliable. Treat the generic `search` parameter as a last resort: it is an opaque server-side text match whose covered fields are undocumented, so it can silently miss or over-match. Whenever the tool schema has a dedicated filter for what you need (e.g. `status`, `priority`, `contract`, `fault_fault_category`, `technician_assigned`, `contract_code_icontains`, `asset_class`), use it instead of `search`. To filter by a named entity, resolve the name to an id first via the reference-data list tools rather than free-text searching by name — unless the tool has no id/`*_icontains` filter for it (e.g. vendors have no name filter, so `search` is the only option there).
+
 ## Work-order labor time (man-hours)
 
 Reactive/PPM work orders and service requests can carry two labor fields:
