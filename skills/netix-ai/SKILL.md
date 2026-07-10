@@ -21,6 +21,17 @@ Tools are named `<domain>_<operation>`:
 
 Most list tools accept optional filters and `limit`. Responses are shaped `{count, results, has_more}` — `count` is the TOTAL matching rows, `results` is the returned page. Lead with the count when summarizing; fetch more pages only when the user needs them.
 
+## Work-order labor time (man-hours)
+
+Reactive/PPM work orders and service requests can carry two labor fields:
+
+- `manhour_secs` — elapsed labor time in **seconds** (e.g. `3600` = 1.0 hour).
+- `man_hours` — a CAFM-computed value whose unit is unspecified; do **not** assume it is already in hours.
+
+**When `manhour_secs` is set (present and non-zero) it takes priority: report labor time from it — `manhour_secs / 3600`, in hours — and treat that as authoritative.** Only fall back to `man_hours` when `manhour_secs` is absent or zero. Never present the raw `man_hours` number as an hours figure while a seconds value is available.
+
+Example: a work order with `man_hours: 0.04` and `manhour_secs: 3600` → report **1.0 man-hour** (derived from `manhour_secs`), not 0.04.
+
 ## Analytics: `complaints_cafm_analytics`
 
 The aggregate/reporting tool over platform records. Rules learned the hard way:
