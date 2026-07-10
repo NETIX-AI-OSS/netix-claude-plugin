@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "netix": {
+    "netix-ai": {
       "type": "http",
       "url": "${NETIX_MCP_URL:-https://ml-engine.api.netixai.com/mcp}",
       "headers": {

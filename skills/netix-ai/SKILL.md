@@ -1,10 +1,10 @@
 ---
-description: Query and analyze NETIX.AI facilities data — assets, work orders, service requests, complaints, compliance records, contracts/vendors, and telemetry — via the netix MCP server. Use whenever the user asks about their buildings, equipment, maintenance, CAFM records, or facility analytics.
+description: Query and analyze NETIX AI Platform data — assets, work orders, service requests, complaints, compliance records, contracts/vendors, and telemetry — via the netix-ai MCP server. Use whenever the user asks about their buildings, equipment, maintenance, facility records, or facility analytics.
 ---
 
-# NETIX CAFM & Facilities Data
+# NETIX AI Platform Data
 
-You have MCP tools (server: `netix`) for the NETIX.AI industrial-IoT / facility-management platform. Tenant scope is injected server-side from the user's API key — never ask for or pass an organization id; every result is already scoped to the user's organization.
+You have MCP tools (server: `netix-ai`) for the NETIX AI industrial-IoT and facility-management platform. Tenant scope is injected server-side from the user's API key — never ask for or pass an organization id; every result is already scoped to the user's organization.
 
 ## Tool domains
 
@@ -14,7 +14,7 @@ Tools are named `<domain>_<operation>`:
 |---|---|
 | `asset_*` | Asset registry: assets, classes, levels (hierarchy), maps. Datasets can be large (tens of thousands of assets) — always filter/limit. |
 | `work_orders_*` | Service requests, reactive & PPM work orders, faults, material inventory, service/fault categories. |
-| `complaints_*` | Complaints and their activities, escalations, follow-ups, linked work orders; building types, clients; plus `complaints_cafm_analytics`. |
+| `complaints_*` | Complaints and their activities, escalations, follow-ups, linked work orders; building types, clients; plus the `cafm_analytics` aggregate tool. |
 | `compliance_*` | Work permits, audit inspections, access cards/permits/parking. |
 | `commercial_*` | Quotations, contracts, contract SLAs, vendors. |
 | `facilities_*` | Telemetry: realtime data, historical data queries, analytics queries, alarm rule templates, prediction models. |
@@ -23,7 +23,7 @@ Most list tools accept optional filters and `limit`. Responses are shaped `{coun
 
 ## Analytics: `complaints_cafm_analytics`
 
-The aggregate/reporting tool over CAFM models. Rules learned the hard way:
+The aggregate/reporting tool over platform records. Rules learned the hard way:
 
 1. `model_name` is required (e.g. `"Complaint"`).
 2. **First call with `explain: true`** for an unfamiliar model — it returns the model's fields, relationships, and allowed aggregations. Then build the real query.
