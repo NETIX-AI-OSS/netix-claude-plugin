@@ -43,7 +43,12 @@ The aggregate/reporting tool over platform records. Rules learned the hard way:
 1. `model_name` is required (e.g. `"Complaint"`).
 2. **First call with `explain: true`** for an unfamiliar model — it returns the model's fields, relationships, and allowed aggregations. Then build the real query.
 3. If you pass `operation` (e.g. `"count"`), you MUST also pass `operation_field` (use `"id"` for row counts) — otherwise the API returns 400 "Operation field is required when operation is specified".
-4. `aggregate_by` groups results (e.g. by `status`); dynamic filters use the `f_<field>` convention (e.g. `f_status: 3`).
+4. `aggregate_by` groups results (e.g. by `status`); `time_bucket` + `time_field` produce a time series; `distinct` applies DISTINCT.
+5. **Dynamic filters use Django field lookups** — this is where most of the power is. Pass `f_<field>` to include and `fe_<field>` to exclude, each with an optional `__<lookup>` suffix:
+   - Ranges & dates: `f_created_on__gte: "2025-01-01"`, `f_created_on__lte: "2025-06-30"` (ISO strings for date/datetime fields).
+   - Membership / text / null: `f_priority__in: "1,2"`, `f_description__icontains: "leak"`, `f_resolved_on__isnull: true`.
+   - Exact match: `f_status: 3`; exclude: `fe_status: 6`. Pass several `f_`/`fe_` keys to AND them together.
+   - Use the exact field names the `explain` call reports. These filters are far more precise than pulling raw rows and filtering yourself.
 
 ## Sandbox tools (per domain)
 
