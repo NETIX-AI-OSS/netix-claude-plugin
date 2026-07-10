@@ -17,7 +17,7 @@ Tools are named `<domain>_<operation>`:
 | `complaints_*` | Complaints and their activities, escalations, follow-ups, linked work orders; building types, clients; plus the `cafm_analytics` aggregate tool. |
 | `compliance_*` | Work permits, audit inspections, access cards/permits/parking. |
 | `commercial_*` | Quotations, contracts, contract SLAs, vendors. |
-| `facilities_*` | Telemetry: realtime data, historical data queries, analytics queries, alarm rule templates, prediction models. |
+| `facilities_*` | Telemetry: realtime data, historical data queries, analytics queries, alarm rule templates, prediction models. Also IoT connectivity: live per-asset online/offline status, offline-transition history, per-asset latest-values data card, alarm logs. |
 
 Most list tools accept optional filters and `limit`. Responses are shaped `{count, results, has_more}` — `count` is the TOTAL matching rows, `results` is the returned page. Lead with the count when summarizing; fetch more pages only when the user needs them.
 
@@ -59,9 +59,19 @@ The aggregate/reporting tool over platform records. Rules learned the hard way:
    - Exact match: `f_status: 3`; exclude: `fe_status: 6`. Pass several `f_`/`fe_` keys to AND them together.
    - Use the exact field names the `explain` call reports. These filters are far more precise than pulling raw rows and filtering yourself.
 
+## IoT connectivity: offline assets and alarms
+
+"Offline" is a telemetry concept, not an asset-registry field — the platform monitors IoT assets continuously and keeps a live per-asset connectivity status. Answer connectivity questions from these `facilities_*` tools; never by paging the asset registry:
+
+- **"How many / which assets are offline?"** → `iot_asset_status_list`. One row per monitored asset with `status`: 0=Online, 1=Degraded (some tags stale), 2=Offline. Call with `status: 2, limit: 1` and read `count` for the offline count; filter by `asset_class_id`, `asset_id_property`, `asset_id_city` to scope it. **A count of 0 with no status filter means offline monitoring isn't configured for this organization — report that; do not claim "all assets are online".**
+- **"When did X go offline / what dropped recently?"** → `iot_offline_log_list` — status transitions with a per-tag breakdown. Use `ordering: "-timestamp"` for most recent (there is no timestamp range filter); still-open incidents via `resolution_datetime_isnull: true`.
+- **"What is asset X reporting right now?"** → `asset_data_card_retrieve` — latest value + timestamp for every tag of one asset, no tag IDs needed up front. Uniformly stale timestamps corroborate "offline"; `iot_asset_status_list` remains the authoritative status.
+- **"Any active alarms?"** → `alarm_log_list` with `resolution_datetime_isnull: true`; severity: 0=INFO, 1=WARNING, 2=CRITICAL; `ordering: "-timestamp"` for latest.
+- The registry-side IoT population ("how many IoT-enabled assets exist?") is `asset_list` with `iot_enabled: true` — but that is an equipment attribute, not connectivity.
+
 ## Sandbox tools (per domain)
 
-- `*_load_dataframe` then `*_execute_code`: load a dataset as a pandas DataFrame (`df`) and run Python against it. The server is stateless — **do a load and its dependent code in the flow the tools document**, and don't assume state survives across separate conversations.
+- `*_load_dataframe` then `*_execute_code`: load a dataset as a pandas DataFrame (`df`) and run Python against it. Only three datasets exist — `service_request`, `reactive_work_order`, `ppm_work_order` — regardless of which domain's tool you call (there is no asset-registry or telemetry dataset; use the list tools for those). The server is stateless — **do a load and its dependent code in the flow the tools document**, and don't assume state survives across separate conversations.
 - `*_generate_chart`: produce a chart from data; prefer it over describing numbers when the user asks for trends/distributions.
 - These tools may be absent on some deployments (disabled server-side). If missing, fall back to list tools + your own analysis.
 
