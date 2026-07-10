@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "netix": {
+      "type": "http",
+      "url": "${NETIX_MCP_URL:-https://ml-engine.api.netixai.com/mcp}",
+      "headers": {
+        "Authorization": "api ${NETIX_API_KEY}"
+      }
+    }
+  }
+}

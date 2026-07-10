@@ -1,0 +1,10 @@
+{
+  "name": "netix",
+  "description": "NETIX.AI facilities & CAFM tools for Claude Code — assets, work orders, complaints, compliance, commercial, and telemetry analytics via the NETIX MCP server.",
+  "version": "0.1.0",
+  "author": {
+    "name": "NETIX.AI"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/NETIX-AI-OSS/netix-claude-plugin"
+}

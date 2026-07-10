@@ -1,0 +1,14 @@
+{
+  "name": "netix",
+  "owner": {
+    "name": "NETIX.AI"
+  },
+  "plugins": [
+    {
+      "name": "netix",
+      "source": "./",
+      "description": "NETIX.AI facilities & CAFM tools — assets, work orders, complaints, compliance, commercial, and telemetry analytics via the NETIX MCP server."
+    }
+  ],
+  "description": "NETIX.AI plugins for Claude Code"
+}
