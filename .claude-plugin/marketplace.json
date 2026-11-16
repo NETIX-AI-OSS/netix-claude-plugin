@@ -7,7 +7,7 @@
     {
       "name": "netix-ai",
       "source": "./",
-      "description": "NETIX AI Platform tools — assets, work orders, complaints, compliance, commercial, and telemetry analytics via the NETIX MCP server."
+      "description": "NETIX AI Platform tools, assets, work orders, complaints, compliance, commercial, and telemetry analytics via the NETIX MCP server."
     }
   ],
   "description": "NETIX AI Platform plugins for Claude Code"
